@@ -18,7 +18,7 @@ namespace TodoProjectUsingCleanArchitecture.Application.Database.Real
         public async Task<IDbConnection> CreateConnectionAsync(CancellationToken token = default)
         {
             var connection = new NpgsqlConnection(_connectionString);
-            await connection.OpenAsync();
+            await connection.OpenAsync(token);
             return connection;
         }
 
@@ -28,7 +28,6 @@ namespace TodoProjectUsingCleanArchitecture.Application.Database.Real
         public async Task InitializeAsync()
         {
             using var connection = await CreateConnectionAsync();
-            
             // Create table if it doesn't exist.
             // Matching TaskItem fields: Id (Guid), Title (string), IsCompleted (bool), CreatedAt (DateTime)
             const string sql = @"
@@ -38,7 +37,6 @@ namespace TodoProjectUsingCleanArchitecture.Application.Database.Real
                     IsCompleted BOOLEAN NOT NULL DEFAULT FALSE,
                     CreatedAt TIMESTAMP WITH TIME ZONE NOT NULL
                 );";
-            
             await connection.ExecuteAsync(sql);
         }
     }

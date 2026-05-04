@@ -10,6 +10,31 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddApplication();
+builder.Services.AddSignalR();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFlutter", policy =>
+    {
+        policy.WithOrigins(
+                "http://localhost:3000",
+                "https://yourflutterapp.com"
+              )
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowFlutter", policy =>
+//    {
+//        policy.AllowAnyHeader()
+//              .AllowAnyMethod()
+//              .SetIsOriginAllowed(_ => true)
+//              .AllowCredentials();
+//    });
+//});
 //builder.Services.AddScoped<ITodoListRepositories, TodoListRepositories>();
 
 var app = builder.Build();
@@ -30,8 +55,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowFlutter");
+
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<TodoProjectUsingCleanArchitecture.Presentation.Hubs.TodoHub>("/todohub");
 
 app.Run();
