@@ -1,0 +1,32 @@
+[
+  {
+    "id": "a1b2c3d4-0000-0000-0000-000000000001",
+    "title": "Learn Clean Architecture",
+    "isCompleted": true,
+    "createdAt": "2026-04-23T13:05:49.4793315+01:00"
+  },
+  {
+    "id": "a1b2c3d4-0000-0000-0000-000000000002",
+    "title": "Build Todo API",
+    "isCompleted": true,
+    "createdAt": "2026-04-21T14:30:00Z"
+  },
+  {
+    "id": "a1b2c3d4-0000-0000-0000-000000000003",
+    "title": "Write unit tests",
+    "isCompleted": false,
+    "createdAt": "2026-04-22T08:15:00Z"
+  },
+  {
+    "id": "e5b9ea3a-263a-4dce-b02e-349c647fdbb1",
+    "title": "Mary Ben",
+    "isCompleted": false,
+    "createdAt": "2026-04-23T13:18:25.4327561+01:00"
+  },
+  {
+    "id": "a218bb95-cc0d-40af-b8f0-d706127e802b",
+    "title": "Glory Claire 🚀🚀",
+    "isCompleted": true,
+    "createdAt": "2026-04-23T13:22:27.5282624+01:00"
+  }
+]
