@@ -29,7 +29,7 @@ namespace TodoProjectUsingCleanArchitecture.Application.Services
 
         public async Task<AuthResponse?> RegisterAsync(RegisterRequest request)
         {
-            var existingUser = await _userRepository.GetByEmailAsync(request.Email);
+            var existingUser = await _userRepository.GetByEmailOrUsernameAsync(request.Email);
             if (existingUser != null) return null;
 
             var user = new User
@@ -59,7 +59,7 @@ namespace TodoProjectUsingCleanArchitecture.Application.Services
 
         public async Task<AuthResponse?> LoginAsync(LoginRequest request)
         {
-            var user = await _userRepository.GetByEmailAsync(request.Email);
+            var user = await _userRepository.GetByEmailOrUsernameAsync(request.Email_Or_Username);
             if (user == null) return null;
 
             var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);

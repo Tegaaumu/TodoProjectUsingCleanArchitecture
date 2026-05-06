@@ -13,11 +13,12 @@ namespace TodoProjectUsingCleanArchitecture.Application.Repositories
             _dbConnectionFactory = dbConnectionFactory;
         }
 
-        public async Task<User?> GetByEmailAsync(string email)
+        public async Task<User?> GetByEmailOrUsernameAsync(string emailOrUsername)
         {
             using var connection = await _dbConnectionFactory.CreateConnectionAsync();
             return await connection.QueryFirstOrDefaultAsync<User>(
-                "SELECT * FROM Users WHERE Email = @Email", new { Email = email });
+                "SELECT * FROM Users WHERE Email = @Identifier OR Username = @Identifier",
+                new { Identifier = emailOrUsername });
         }
 
         public async Task<bool> CreateAsync(User user)

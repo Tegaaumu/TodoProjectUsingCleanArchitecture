@@ -10,7 +10,10 @@ public class RegisterRequestValidator : AbstractValidator<RegisterRequest>
                 .NotEmpty()
                 .WithMessage("Username is required.")
                 .MinimumLength(3)
-                .WithMessage("Username must be at least 3 characters.");
+                .WithMessage("Username must be at least 3 characters.")
+                .Must(x => !x.Any(char.IsWhiteSpace))
+                .WithMessage("Username cannot contain spaces.");
+
 
             RuleFor(x => x.Email)
                 .NotEmpty()
