@@ -1,6 +1,9 @@
 using TodoProjectUsingCleanArchitecture;
 using TodoProjectUsingCleanArchitecture.Application.Database.Real;
 using TodoProjectUsingCleanArchitecture.Presentation.Swagger;
+using TodoProjectUsingCleanArchitecture.Presentation.Auth;
+using FluentValidation;
+using TodoProjectUsingCleanArchitecture.Application.Validator;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +15,8 @@ builder.Services.AddSwaggerGenWithAuth();
 builder.Services.AddApplication();
 builder.Services.AddSignalR();
 
+builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddValidatorsFromAssemblyContaining<RegisterRequestValidator>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFlutter", policy =>
@@ -56,9 +61,11 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowFlutter");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 app.MapHub<TodoProjectUsingCleanArchitecture.Presentation.Hubs.TodoHub>("/todohub");
+    //.RequireCors("AllowFlutter");
 
 app.Run();

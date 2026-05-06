@@ -22,6 +22,14 @@ namespace TodoProjectUsingCleanArchitecture.Application.Database.Real
                     Title TEXT NOT NULL,
                     IsCompleted BOOLEAN NOT NULL DEFAULT FALSE,
                     CreatedAt TIMESTAMP WITH TIME ZONE NOT NULL
+                );
+                
+                CREATE TABLE IF NOT EXISTS Users (
+                    Id UUID PRIMARY KEY,
+                    Username TEXT NOT NULL,
+                    Email TEXT NOT NULL UNIQUE,
+                    PasswordHash TEXT NOT NULL,
+                    CreatedAt TIMESTAMP WITH TIME ZONE NOT NULL
                 );");
         }
     }

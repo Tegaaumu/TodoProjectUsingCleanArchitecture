@@ -20,7 +20,6 @@ namespace TodoProjectUsingCleanArchitecture.Presentation.Swagger
                 });
 
                 // Add Security Definitions if you have authentication later
-                /*
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
@@ -45,7 +44,6 @@ namespace TodoProjectUsingCleanArchitecture.Presentation.Swagger
                         new string[]{}
                     }
                 });
-                */
             });
 
             return services;

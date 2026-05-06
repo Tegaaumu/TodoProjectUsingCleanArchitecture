@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TodoProjectUsingCleanArchitecture.Application.Models;
 using TodoProjectUsingCleanArchitecture.Application.Repositories;
@@ -20,6 +21,7 @@ namespace TodoProjectUsingCleanArchitecture.Presentation.Controllers
             _todoListServices= todoListServices;
         }
         // GET: api/<TodoListController>
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Get()
         {

@@ -49,11 +49,16 @@ namespace TodoProjectUsingCleanArchitecture.Application.Services
         {
             var tasks = await _todoListRepositories.GetAllAsync();
 
-            return tasks.Select(t => new TaskItemDto
+            // return tasks.Select(t => new TaskItemDto
+            // {
+            //     Id = t.Id,
+            //     Title = t.Title
+            // }).ToList();
+            return tasks.ConvertAll(t => new TaskItemDto
             {
                 Id = t.Id,
                 Title = t.Title
-            }).ToList();
+            });
         }
 
         public async Task<bool> UpdateAync(TaskItem taskItem)
