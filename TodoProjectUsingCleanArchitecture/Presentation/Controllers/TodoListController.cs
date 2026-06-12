@@ -32,14 +32,18 @@ namespace TodoProjectUsingCleanArchitecture.Presentation.Controllers
 
         // GET api/<TodoListController>/5
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(Guid), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get(Guid id)
         {
             var task = await _todoListServices.GetByIdAsync(id);
+            if (task == null)
+                return NotFound("This id is incorrect");
             return Ok(task);
         }
 
         // POST api/<TodoListController>
         [HttpPost]
+    // [ProducesResponseType(typeof(MovieReponse), StatusCodes.Status201Created)]
         public async Task<IActionResult> Post([FromBody] TaskItemRequest request)
         {
 
