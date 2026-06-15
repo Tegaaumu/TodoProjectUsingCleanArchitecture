@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Mail;
 
 namespace TodoProjectUsingCleanArchitecture.Application.Services
@@ -6,9 +7,11 @@ namespace TodoProjectUsingCleanArchitecture.Application.Services
     {
         private readonly ILogger<EmailService> _logger;
 
-        public EmailService(ILogger<EmailService> logger)
+        private readonly IConfiguration _configuration;
+        public EmailService(ILogger<EmailService> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _configuration = configuration;
         }
 
         public async Task SendWelcomeEmailAsync(string email, string username)
@@ -37,8 +40,27 @@ namespace TodoProjectUsingCleanArchitecture.Application.Services
             // message.Subject = "Welcome to TodoPlatform";
             // message.Body = htmlBody;
             // message.IsBodyHtml = true;
-            // using var client = new SmtpClient("smtp.example.com");
-            // await client.SendMailAsync(message);
+
+            var message = new MailMessage();
+
+            message.From = new MailAddress(_configuration["MailSettings:SenderEmail"]!);
+            message.To.Add(email);
+            message.CC.Add(_configuration["MailSettings:SenderEmail"]!);
+
+            message.Subject = "Welcome to TodoPlatform";
+            message.Body = htmlBody;
+            message.IsBodyHtml = true;
+
+            using var client = new SmtpClient(_configuration["MailSettings:SmtpServer"], int.Parse(_configuration["MailSettings:Port"]!));
+
+            client.Credentials = new NetworkCredential(
+                _configuration["MailSettings:SenderEmail"],
+                _configuration["MailSettings:Password"]
+            );
+
+            client.EnableSsl = true;
+
+            await client.SendMailAsync(message);
 
             await Task.CompletedTask;
         }

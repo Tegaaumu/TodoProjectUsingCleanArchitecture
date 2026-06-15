@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using TodoProjectUsingCleanArchitecture.Application.Services;
+using TodoProjectUsingCleanArchitecture.Contract;
 using TodoProjectUsingCleanArchitecture.Contract.Request;
 
 namespace TodoProjectUsingCleanArchitecture.Presentation.Controllers;
 [ApiController]
-[Route("api/[controller]")]
 public class RegisterController : ControllerBase
 {
     private readonly IIdentityService _identityService;
@@ -14,7 +14,7 @@ public class RegisterController : ControllerBase
         _identityService = identityService;
     }
 
-    [HttpPost]
+    [HttpPost(ApiEndpoints.Register.RegisterUser)]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
         var response = await _identityService.RegisterAsync(request);

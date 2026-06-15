@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TodoProjectUsingCleanArchitecture.Application.Models;
 using TodoProjectUsingCleanArchitecture.Application.Repositories;
 using TodoProjectUsingCleanArchitecture.Application.Services;
+using TodoProjectUsingCleanArchitecture.Contract;
 using TodoProjectUsingCleanArchitecture.Contract.Request;
 using TodoProjectUsingCleanArchitecture.Presentation.Mapping;
 
@@ -11,7 +12,6 @@ using TodoProjectUsingCleanArchitecture.Presentation.Mapping;
 
 namespace TodoProjectUsingCleanArchitecture.Presentation.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class TodoListController : ControllerBase
     {
@@ -22,7 +22,7 @@ namespace TodoProjectUsingCleanArchitecture.Presentation.Controllers
         }
         // GET: api/<TodoListController>
         [Authorize]
-        [HttpGet]
+        [HttpGet(ApiEndpoints.TodoList.Get)]
         public async Task<IActionResult> Get()
         {
             //var tasks = await _todoListRepositories.GetAllAsync();
@@ -31,7 +31,7 @@ namespace TodoProjectUsingCleanArchitecture.Presentation.Controllers
         }
 
         // GET api/<TodoListController>/5
-        [HttpGet("{id}")]
+        [HttpGet(ApiEndpoints.TodoList.GetById)]
         [ProducesResponseType(typeof(Guid), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get(Guid id)
         {
@@ -42,7 +42,9 @@ namespace TodoProjectUsingCleanArchitecture.Presentation.Controllers
         }
 
         // POST api/<TodoListController>
-        [HttpPost]
+        // Authorized only for users with the CanCreate policy/permission claim.
+        [Authorize(Policy = ApiEndpoints.Policies.CanCreate)]
+        [HttpPost(ApiEndpoints.TodoList.Create)]
     // [ProducesResponseType(typeof(MovieReponse), StatusCodes.Status201Created)]
         public async Task<IActionResult> Post([FromBody] TaskItemRequest request)
         {
@@ -55,7 +57,9 @@ namespace TodoProjectUsingCleanArchitecture.Presentation.Controllers
         }
 
         // PUT api/<TodoListController>/5
-        [HttpPut("{id}")]
+        // Authorized only for users with the CanEdit policy/permission claim.
+        [Authorize(Policy = ApiEndpoints.Policies.CanEdit)]
+        [HttpPut(ApiEndpoints.TodoList.Update)]
         public async Task<IActionResult> Put(Guid id, TaskItemRequest request)
         {
             var todoList = request.MapToList(id);
@@ -64,7 +68,9 @@ namespace TodoProjectUsingCleanArchitecture.Presentation.Controllers
         }
 
         // DELETE api/<TodoListController>/5
-        [HttpDelete("{id}")]
+        // Authorized only for users with the CanDelete policy/permission claim.
+        [Authorize(Policy = ApiEndpoints.Policies.CanDelete)]
+        [HttpDelete(ApiEndpoints.TodoList.Delete)]
         public async Task<IActionResult> Delete(Guid id)
         {
             var task = await _todoListServices.GetByIdAsync(id);

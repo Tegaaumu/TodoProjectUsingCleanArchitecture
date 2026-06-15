@@ -78,15 +78,27 @@ namespace TodoProjectUsingCleanArchitecture.Application.Services
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]!);
+            
+            // Define custom token claims mapping the user authorization permissions.
+            // These claims are encoded inside the JWT payload so that downstream requests
+            // can verify authorization without repeatedly fetching user privileges from the DB.
+            var claims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.Username),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                
+                // Permission claims: used by authorization policies to control API endpoint access.
+                new Claim("CanCreate", user.CanCreate.ToString().ToLowerInvariant()),
+                new Claim("CanEdit", user.CanEdit.ToString().ToLowerInvariant()),
+                new Claim("CanDelete", user.CanDelete.ToString().ToLowerInvariant()),
+                new Claim("CanAssign", user.CanAssign.ToString().ToLowerInvariant())
+            };
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                    new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                    new Claim(JwtRegisteredClaimNames.UniqueName, user.Username),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                }),
+                Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddDays(7),
                 Issuer = _configuration["Jwt:Issuer"],
                 Audience = _configuration["Jwt:Audience"],
